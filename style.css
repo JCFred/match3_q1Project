@@ -1,6 +1,7 @@
 body{
   display: flex;
   justify-content: center;
+  align-items:center;
 }
 
 #gridContainer{
@@ -8,6 +9,7 @@ body{
     flex-wrap: wrap;
     box-sizing: content-box;
     border: 1px solid black;
+    margin-top: 50px;
 }
 .btnDiv{
   display:flex;
@@ -22,6 +24,9 @@ body{
   align-items: center;
 }
 .dot{
+  display:flex;
+  justify-content:center;
+  align-items:center;
   border-radius: 50%;
   border:1px solid black;
   box-sizing: content-box;
