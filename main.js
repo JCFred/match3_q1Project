@@ -55,16 +55,16 @@ function drawGrid(){
 }
 
 function runMatch(){
+  matchCheck()
   //pause before destroying matches
-  setTimeout(matchCheck() ,4000);
-  updateGrid()
+  updateGrid();
 }
 
 function matchCheck(){
   for(let x = 0; x < gridSize; x++){
     for(let y = 0; y < gridSize; y++){
       let color2Match = gridArray[y][x].color;
-      if(y < gridSize -2){
+      if(y < gridSize -2 && color2Match != "white"){
         //check down two
         if(gridArray[y +1][x].color === color2Match && gridArray[y +2][x].color === color2Match){
           gridArray[y][x].matched = true;
@@ -73,7 +73,7 @@ function matchCheck(){
         }
       }
       //check right two
-      if(x < gridSize -2){
+      if(x < gridSize -2 && color2Match != "white"){
         if(gridArray[y][x +1].color === color2Match && gridArray[y][x +2].color === color2Match){
           gridArray[y][x].matched = true;
           gridArray[y][x +1].matched = true;
@@ -90,13 +90,90 @@ function updateGrid(){
       if(gridArray[y][x].matched === true){
         let containerPos = container.getBoundingClientRect();
         let divAtPos = document.elementFromPoint(x*boxSize + containerPos.left +1, y*boxSize + containerPos.top +1)
-        divAtPos.style.backgroundColor = "white"
-        //console.log(x + " , " + y + " is a match!");
+        let oldColor = gridArray[y][x].color;
+        let newColor = colorSwitch(oldColor);
+        divAtPos.style.backgroundColor = newColor
+        setTimeout(function(){divAtPos.style.backgroundColor = "white"},300)
+        gridArray[y][x].color = "white"
+        gridArray[y][x].matched = false;
+      }
+    }
+  }
+  popNDrop();
+}
+
+function popNDrop(){
+  for(let x = 0; x < gridSize; x++){
+    for(let y = gridSize-1; y > -1; y--){
+      let containerPos = container.getBoundingClientRect();
+      let divAtPos = document.elementFromPoint(x*boxSize + containerPos.left +1, y*boxSize + containerPos.top +1)
+      divAtPos.append(x + " , " + y)
+      if(gridArray[x][y].color == "white"){
+        let whites = 1;
+        let empty = true;
+        while(empty === true){
+          if((y-whites > -1) && gridArray[x][y - whites].color == "white"){
+            whites += 1;
+          } else {
+            empty = false;
+          }
+        }
+        realDrop(x, y, whites);
       }
     }
   }
 }
+function realDrop(x, y, dropSpaces){
+  if(y-dropSpaces > -1){
+    let containerPos = container.getBoundingClientRect();
+    let dropDivAtPos = document.elementFromPoint(x*boxSize + containerPos.left +1, (y -dropSpaces)*boxSize + containerPos.top +1)
+    let bottomDivAtPos = document.elementFromPoint(x*boxSize + containerPos.left +1, y*boxSize + containerPos.top +1)
 
+    let moveColor = gridArray[x][y - dropSpaces].color;
+    bottomDivAtPos.style.backgroundColor = moveColor;
+    dropDivAtPos.style.backgroundColor = "white"
+  }
+}
+
+function drop(y,x, drop){
+  let containerPos = container.getBoundingClientRect();
+  let divAtPos = document.elementFromPoint(x*boxSize + containerPos.left +1, y*boxSize + containerPos.top +1)
+  let downDivAtPos = document.elementFromPoint(x *boxSize + containerPos.left +1, (y + drop)*boxSize + containerPos.top +1)
+  //update new colors
+  downDivAtPos.style.backgroundColor = gridArray[y][x].color;
+  gridArray[y+1][x].color = gridArray[y][x].color;
+  divAtPos.style.backgroundColor = "white"
+  gridArray[y][x].color = "white"
+}
+
+function array2Div(x, y){
+  let containerPos = container.getBoundingClientRect();
+  let divAtPos = document.elementFromPoint(x*boxSize + containerPos.left +1, y*boxSize + containerPos.top +1)
+  divAtPos.style.backgroundColor = gridArray[x][y].color;
+}
+
+function colorSwitch(color){
+  switch(color){
+    case "red":
+    return "rgb(255, 120, 84)"
+      break;
+    case "blue":
+      return "rgb(94, 251, 228)"
+      break;
+    case "yellow":
+      return "rgb(234, 241, 104)"
+      break;
+    case "green":
+      return "rgb(86, 228, 91)"
+      break;
+    case "orange":
+      return "rgb(250, 191, 76)"
+      break;
+    case "purple":
+      return "rgb(239, 75, 254)"
+      break;
+  }
+}
 
 function randomColor(min, max) {
   min = Math.ceil(min);

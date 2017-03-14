@@ -9,8 +9,22 @@ body{
     box-sizing: content-box;
     border: 1px solid black;
 }
-
+.btnDiv{
+  display:flex;
+  flex-direction: column;
+}
 .box{
   border: 1px solid black;
   box-sizing: border-box;
+
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+.dot{
+  border-radius: 50%;
+  border:1px solid black;
+  box-sizing: content-box;
+  height:50px;
+  width:50px;
 }
