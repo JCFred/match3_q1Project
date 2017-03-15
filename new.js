@@ -10,6 +10,9 @@ var dotPick = [];
 var matched = false;
 drawGrid();
 
+
+
+
 //test click, logs position and array object
 $('.box').click(function(event){
     let containerPos = container.getBoundingClientRect();
