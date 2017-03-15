@@ -17,11 +17,14 @@ runGameStep();
 $('.box').click(function(event){
     let containerPos = container.getBoundingClientRect();
     let divPos = event.target.getBoundingClientRect();
-    // console.log(containerPos)
-    // console.log(divPos);
+    //console.log(event.target)
+    //console.log(divPos);
     let xx = Math.floor((divPos.left - containerPos.left)/boxSize);
     let yy = Math.floor((divPos.top - containerPos.top)/boxSize);
-    //console.log(xx + " , " + yy);
+    //stupid fix for BAD math, fix later??
+    if(xx === 8){xx = 7;}
+    if(yy == 8){yy = 7;}
+    //console.log(yy + " , " + xx);
 
   //swap dots code
   if(event.target.classList.contains('dot') && playerPause === true){
@@ -30,8 +33,16 @@ $('.box').click(function(event){
       dotPick[0] = xx;
       dotPick[1] = yy;
       selected = 1;
+      gridDiv.css("backgroundColor", "red");
+      //console.log(gridDiv.style.backgroundColor);
+
+
     } else if (selected === 1){
-      if(((yy === dotPick[1]+1 || yy === dotPick[1]-1) && xx == dotPick[0])
+      if(yy === dotPick[1] && xx === dotPick[0]){
+        $('#' + dotPick[1] + "_" + dotPick[0]).css("backgroundColor", "#c2c0bd");
+        selected = 0;
+        //dotPick = [];
+      } else if(((yy === dotPick[1]+1 || yy === dotPick[1]-1) && xx == dotPick[0])
       || ((xx === dotPick[0]+1 || xx === dotPick[0]-1) && yy == dotPick[1])){
         let divOne = $('#' + dotPick[1] + "_" + dotPick[0]);
         let dotOne = divOne.contents();
@@ -43,6 +54,7 @@ $('.box').click(function(event){
         gridArray[yy][xx].color = tempColor;
         selected = 0;
         playerPause = false;
+        $('#' + dotPick[1] + "_" + dotPick[0]).css("backgroundColor", "#c2c0bd");
         runGameStep();
       }
     }
@@ -236,6 +248,7 @@ function drawGrid(){
       let tempDiv = document.createElement('div');
       tempDiv.style.width = boxSize + "px"
       tempDiv.style.height = boxSize + "px"
+      tempDiv.style.backgroundColor = "#c2c0bd"
       tempDiv.className = 'box'
       tempDiv.id = w + "_" + h;
       container.append(tempDiv)
