@@ -4,12 +4,14 @@ var container = document.getElementById('gridContainer');
 var boxSize = 50;
 var gridSize = 8;
 var gridArray = [];
+var playerPause = true;
+var selected = 0;
+var dotPick = [];
 var matched = false;
 drawGrid();
 
 //test click, logs position and array object
 $('.box').click(function(event){
-  //if(event.target.classList.contains('dot')){
     let containerPos = container.getBoundingClientRect();
     let divPos = event.target.getBoundingClientRect();
     // console.log(containerPos)
@@ -20,7 +22,28 @@ $('.box').click(function(event){
     let shit = gridArray[yy][xx]
     console.log(yy + " , " + xx);
     console.log(shit);
-  //}
+  //swap code
+  if(event.target.classList.contains('dot') && playerPause === true){
+    let gridDiv = $('#' + yy + "_" + xx);
+    if(selected === 0){
+      dotPick[0] = xx;
+      dotPick[1] = yy;
+      selected = 1;
+    } else if (selected === 1){
+      if(((yy === dotPick[1]+1 || yy === dotPick[1]-1) && xx == dotPick[0])
+      || ((xx === dotPick[0]+1 || xx === dotPick[0]-1) && yy == dotPick[1])){
+        let divOne = $('#' + dotPick[1] + "_" + dotPick[0]);
+        let dotOne = divOne.contents();
+        divOne.contents().remove();
+        gridDiv.contents().appendTo(divOne);
+        dotOne.appendTo(gridDiv);
+        let tempColor = gridArray[dotPick[1]][dotPick[0]].color;
+        gridArray[dotPick[1]][dotPick[0]].color = gridArray[yy][xx].color
+        gridArray[yy][xx].color = tempColor;
+        selected = 0;
+      }
+    }
+  }
 })
 
 
@@ -28,28 +51,30 @@ $('#matchBtn').click(function(){
   for(let y = 0; y < gridSize; y++){
     for(let x = 0; x < gridSize; x++){
       let color2Match = gridArray[x][y].color;
-      if(x < gridSize -2){
-        //check down two
-        if(gridArray[x +1][y].color === color2Match && gridArray[x +2][y].color === color2Match){
-          gridArray[x][y].matched = true;
-          tempMark(x, y)
-          gridArray[x +1][y].matched = true;
-          tempMark(x+1, y)
-          gridArray[x +2][y].matched = true;
-          tempMark(x +2, y)
-          matched = true;
+      if(color2Match !== "none"){
+        if(x < gridSize -2){
+          //check down two
+          if(gridArray[x +1][y].color === color2Match && gridArray[x +2][y].color === color2Match){
+            gridArray[x][y].matched = true;
+            tempMark(x, y)
+            gridArray[x +1][y].matched = true;
+            tempMark(x+1, y)
+            gridArray[x +2][y].matched = true;
+            tempMark(x +2, y)
+            matched = true;
+          }
         }
-      }
-      //check right two
-      if(y < gridSize -2){
-        if(gridArray[x][y +1].color === color2Match && gridArray[x][y +2].color === color2Match){
-          gridArray[x][y].matched = true;
-          tempMark(x,y)
-          gridArray[x][y +1].matched = true;
-          tempMark(x, y+1)
-          gridArray[x][y +2].matched = true;
-          tempMark(x, y+2)
-          matched = true;
+        //check right two
+        if(y < gridSize -2){
+          if(gridArray[x][y +1].color === color2Match && gridArray[x][y +2].color === color2Match){
+            gridArray[x][y].matched = true;
+            tempMark(x,y)
+            gridArray[x][y +1].matched = true;
+            tempMark(x, y+1)
+            gridArray[x][y +2].matched = true;
+            tempMark(x, y+2)
+            matched = true;
+          }
         }
       }
     }
@@ -92,57 +117,47 @@ $('#dropBtn').click(function(){
   }
 })
 
+
 $('#repopBtn').click(function(){
   for(let y = 0; y < gridSize; y++){
-    $('#0_' + y).contents().append(y);
-    if(gridArray[0][y].empty == true){
-      if(gridArray[1][y].empty == true){
-        //empty and div below is empty
-        let noFloor = true;
-        let down = 1;
-        while(noFloor){
-          if(gridArray[down][y].empty == true){
-            down += 1;
-          } else {noFloor = false;}
+    if(gridArray[0][y].empty === true){
+      let noFloor = true;
+      let down = 1;
+      while(noFloor){
+        if(gridArray[down][y].empty === true){
+          down += 1;
+        }else if(down > gridArray -1){
+          noFloor = false;
+        } else if (gridArray[down][y].empty === false){
+          noFloor = false;
         }
-        popNDrop(y, down)
-      } else {
-        popNDrop(y, 1)
+      }
+      //$('#'+down+'_' + y).contents().append(down);
+      for(let i = 0; i < down; i++){
+        let tempDot = document.createElement('div');
+        let newDiv = $('#'+i+"_"+y)
+        let tempColor = randomColor(0,6)
+        tempDot.className = "dot";
+        tempDot.style.backgroundColor = tempColor;
+        tempDot.style.height = boxSize -4 + "px";
+        tempDot.style.width = boxSize -4 + "px";
+        newDiv.append(tempDot);
+        gridArray[i][y].empty = false;
+        gridArray[i][y].color = tempColor;
       }
     }
   }
-  matched = false;
 })
 
-function popNDrop(y, number){
-  for(let i = number; i > 0; i--){
-    let dotDiv = document.createElement('div');
-    dotDiv.className = "dot";
-    let tempColor = randomColor(0,6)
-    dotDiv.style.backgroundColor = tempColor;
-    gridArray[i -1][y].color = tempColor;
-    gridArray[i -1][y].empty = false;
-    dotDiv.style.width = boxSize -4 + "px"
-    dotDiv.style.height = boxSize -4 + "px"
-    $('#' +(i-1)+ '_' +y).append(dotDiv)
-    let child = $('#' +i+ '_' +y).contents();
-    child.hide();
-
-    let oldOffSet = $('#0_'+y).offset();
-    let newOffSet = $('#'+(i-1)+'_'+y).offset();
-    let tempClone = child.clone().appendTo('body');
-    tempClone.css({
-      'position': 'absolute',
-      'left': oldOffSet.left,
-      'top': oldOffSet.top - boxSize,
-      'z-index': 1000
-    });
-    tempClone.animate({'top': newOffSet.top, 'left': newOffSet.left}, 'slow', function(){
-      child.show();
-      tempClone.remove();
-    });
+$('#playerBtn').click(function(){
+  if(playerPause === true){
+    playerPause = false;
+    document.querySelector('#playerP').textContent = "off"
+  } else if(playerPause === false){
+    playerPause = true;
+    document.querySelector('#playerP').textContent = "on"
   }
-}
+})
 
 //drop each piece in column one at a time
 function hotDrop(child, newParent, y, x, yChange){

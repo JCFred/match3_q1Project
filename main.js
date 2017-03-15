@@ -30,6 +30,7 @@ $('#gridContainer').click(function(event){
 function drawGrid(){
   container.style.width = (gridSize * boxSize) + "px";
   container.style.height = (gridSize * boxSize) + "px";
+  $('.gridDiv').style.height = (gridSize * boxSize) + "px";
   //create 3d array of object for the grid
   for(let x = 0; x < gridSize; x++){
     gridArray[x] = [];
