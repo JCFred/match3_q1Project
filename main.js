@@ -18,7 +18,7 @@ $('.box').click(function(event){
     let containerPos = container.getBoundingClientRect();
     let divPos = event.target.getBoundingClientRect();
     //console.log(event.target)
-    console.log(divPos);
+    //console.log(divPos);
     let xx = Math.floor((divPos.left - containerPos.left)/boxSize);
     let yy = Math.floor((divPos.top - containerPos.top)/boxSize);
     //stupid fix for BAD math, fix later??
@@ -176,23 +176,84 @@ function destroyMatched(){
 function shootScore(redScore, blueScore, yellowScore){
   if(redScore > 0){
     $('#scoreOne').html("+" + redScore);
+    shotAnimation("red", redScore);
   } else{
     $('#scoreOne').html("");
   }
   if(blueScore > 0){
     $('#scoreTwo').html("+" + blueScore);
+    shotAnimation("blue", blueScore);
   } else {
     $('#scoreTwo').html("");
   }
   if(yellowScore > 0){
     $('#scoreThree').html("+" + yellowScore);
+    shotAnimation("yellow", yellowScore)
   } else {
     $('#scoreThree').html("");
   }
 }
 
 function shotAnimation(color, score){
-  
+  if(color === "red"){
+    let shotLane = $('#shotOne');
+    let tempShot = document.createElement('div');
+    tempShot.className = 'redShot'
+    tempShot.id = "rBullet"
+    shotLane.append(tempShot)
+    let lanePos = shotLane.offset();
+
+    $('#rBullet').css({
+      'position': 'absolute',
+      'left': lanePos.left +2,
+      'top': lanePos.top + 23,
+      'z-index': 1000
+    });
+    $('#rBullet').animate({'top': lanePos.top + 23, 'left': lanePos.left + 400}, 'slow', function(){
+      $('#rBullet').remove();
+    });
+
+  } else if(color === "blue"){
+    let shotLane = $('#shotTwo');
+    let tempShot = document.createElement('div');
+    shotLane.append(tempShot)
+    tempShot.className = 'blueShot'
+    tempShot.id = "bBullet"
+    let lanePos = shotLane.offset();
+
+    $('#bBullet').css({
+      'position': 'absolute',
+      'left': lanePos.left +2,
+      'top': lanePos.top + 23,
+      'z-index': 1000
+    });
+    $('#bBullet').animate({'top': lanePos.top + 23, 'left': lanePos.left + 400}, 'slow', function(){
+      $('#bBullet').remove();
+    });
+  } else if(color === "yellow"){
+      let shotLane = $('#shotThree')
+      let tempShot = document.createElement('div');
+      shotLane.append(tempShot);
+      tempShot.className = 'yellowShotDiv'
+      tempShot.id = 'yBullet'
+      let bulletOne = document.createElement('div');
+      let bulletTwo = document.createElement('div');
+      bulletOne.className = 'yellowShot';
+      bulletTwo.className = 'yellowShot';
+      tempShot.append(bulletOne);
+      $('#yBullet').append(bulletTwo);
+      let lanePos = shotLane.offset();
+
+      $('#yBullet').css({
+        'position': 'absolute',
+        'left': lanePos.left +2,
+        'top': lanePos.top,
+        'z-index': 1000
+      });
+      $('#yBullet').animate({'top': lanePos.top, 'left': lanePos.left + 400}, 'slow', function(){
+        $('#yBullet').remove();
+      });
+  }
 }
 
 
