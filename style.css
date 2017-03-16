@@ -57,16 +57,21 @@ body{
 }
 .scoreDiv{
   display:flex;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
   border: 1px solid white;
   width: 48px;
   height: 75px;
 }
 .shipDiv{
-  box-sizing: border-box;
-  border: 1px solid white;
-  width: 100px;
-  height: 75px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: content-box;
+  /*border: 1px solid white;*/
+  width: 102px;
+  height: 72px;
 }
 .shotDiv{
   box-sizing: border-box;
@@ -114,4 +119,23 @@ body{
   /*border-radius: 50%;*/
   /*border:1px solid black;*/
   box-sizing: content-box;
+}
+
+#shipOne{
+  background: url(sprites/ships.png) 0px 0px;
+}
+#shipTwo{
+  background: url(sprites/ships.png) 100px 0px;
+}
+#shipThree{
+  background: url(sprites/ships.png) 200px 0px;
+}
+#scoreOne{
+  color: red;
+}
+#scoreTwo{
+  color: blue;
+}
+#scoreThree{
+  color: yellow;
 }

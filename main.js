@@ -132,17 +132,69 @@ function matchCheck(){
 
 //remove any dots that were matched and reset gridArray values
 function destroyMatched(){
+  let yScore = 0;
+  let bScore = 0;
+  let rScore = 0;
   for(let y = 0;y < gridSize; y++){
     for(let x = 0; x < gridSize; x++){
       if(gridArray[y][x].matched === true){
         gridArray[y][x].matched = false;
         gridArray[y][x].empty = true;
+        switch(gridArray[y][x].color){
+          case "red":
+            rScore += 1;
+            break;
+          case "blue":
+            bScore +=1
+            break;
+          case "yellow":
+            yScore += 1;
+            break;
+          case "green":
+            yScore += .5;
+            bScore += .5
+            break;
+          case "orange":
+            rScore += .5;
+            yScore += .5;
+            break;
+          case "purple":
+            rScore += .5;
+            bScore += .5;
+            break;
+        }
         gridArray[y][x].color = "none";
         $('#' +y+ '_' +x).contents().remove()
       }
     }
   }
+  shootScore(rScore, bScore, yScore);
 }
+
+
+//get and use the score!
+function shootScore(redScore, blueScore, yellowScore){
+  if(redScore > 0){
+    $('#scoreOne').html("+" + redScore);
+  } else{
+    $('#scoreOne').html("");
+  }
+  if(blueScore > 0){
+    $('#scoreTwo').html("+" + blueScore);
+  } else {
+    $('#scoreTwo').html("");
+  }
+  if(yellowScore > 0){
+    $('#scoreThree').html("+" + yellowScore);
+  } else {
+    $('#scoreThree').html("");
+  }
+}
+
+function shotAnimation(color, score){
+  
+}
+
 
 //find dots with empty grid underthem and run drop animation function
 function dotDrop(){
@@ -224,7 +276,6 @@ function rePop(){
     }
   }
 }
-
 
 
 
