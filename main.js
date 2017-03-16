@@ -18,13 +18,13 @@ $('.box').click(function(event){
     let containerPos = container.getBoundingClientRect();
     let divPos = event.target.getBoundingClientRect();
     //console.log(event.target)
-    //console.log(divPos);
+    console.log(divPos);
     let xx = Math.floor((divPos.left - containerPos.left)/boxSize);
     let yy = Math.floor((divPos.top - containerPos.top)/boxSize);
     //stupid fix for BAD math, fix later??
     if(xx === 8){xx = 7;}
     if(yy == 8){yy = 7;}
-    //console.log(yy + " , " + xx);
+    console.log(yy + " , " + xx);
 
   //swap dots code
   if(event.target.classList.contains('dot') && playerPause === true){
@@ -213,9 +213,10 @@ function rePop(){
         let newDiv = $('#'+i+"_"+y)
         let tempColor = randomColor(0,6)
         tempDot.className = "dot";
-        tempDot.style.backgroundColor = tempColor;
-        tempDot.style.height = boxSize -4 + "px";
-        tempDot.style.width = boxSize -4 + "px";
+        let spriteArr = getSprite(tempColor)
+        tempDot.style.background = "url(sprites/gems.png)" + spriteArr[0] + "px " + spriteArr[1] + "px";
+        tempDot.style.height = boxSize + "px";
+        tempDot.style.width = boxSize + "px";
         newDiv.append(tempDot);
         gridArray[i][y].empty = false;
         gridArray[i][y].color = tempColor;
@@ -252,12 +253,15 @@ function drawGrid(){
       tempDiv.className = 'box'
       tempDiv.id = w + "_" + h;
       container.append(tempDiv)
+
       let dotDiv = document.createElement('div');
       dotDiv.className = "dot";
       //console.log(dotDiv.id)
-      dotDiv.style.backgroundColor = gridArray[w][h].color;
-      dotDiv.style.width = boxSize -4 + "px"
-      dotDiv.style.height = boxSize -4 + "px"
+      //dotDiv.style.backgroundColor = gridArray[w][h].color;
+      let spriteArr = getSprite(gridArray[w][h].color)
+      dotDiv.style.background = "url(sprites/gems.png)" + spriteArr[0] + "px " + spriteArr[1] + "px";
+      dotDiv.style.width = boxSize+ "px"
+      dotDiv.style.height = boxSize+ "px"
       tempDiv.append(dotDiv)
     }
   }
@@ -288,4 +292,35 @@ function randomColor(min, max) {
       return "purple"
       break;
   }
+}
+
+function getSprite(color){
+  let tempArr = [];
+  switch(color){
+    case "red":
+      tempArr[0] = 0;
+      tempArr[1] = 0;
+      break;
+    case "blue":
+      tempArr[0] = 50;
+      tempArr[1] = 50;
+      break;
+    case "yellow":
+      tempArr[0] = 150;
+      tempArr[1] = 100;
+      break;
+    case "green":
+      tempArr[0] = 0;
+      tempArr[1] = 100;
+      break;
+    case "orange":
+      tempArr[0] = 0;
+      tempArr[1] = 200;
+      break;
+    case "purple":
+      tempArr[0] = 50;
+      tempArr[1] = 0;
+      break;
+  }
+  return tempArr;
 }
