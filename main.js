@@ -296,19 +296,19 @@ function pilotDialog(color, text){
   switch(color){
     case "red":
       document.querySelector('#pilotName').textContent = "red pilot"
-      document.querySelector('#pilotSpeech').textContent = "Perfect Match!"
+      document.querySelector('#pilotSpeech').textContent = getDialog("red")
       animate(200, "red")
 
       break;
     case "blue":
       document.querySelector('#pilotName').textContent = "blue pilot"
-      document.querySelector('#pilotSpeech').textContent = "Holy Moly, you're good!"
+      document.querySelector('#pilotSpeech').textContent = getDialog("blue")
       animate(100, "blue")
 
       break;
     case "yellow":
       document.querySelector('#pilotName').textContent = "Auto-Pilot"
-      document.querySelector('#pilotSpeech').textContent = "Tracking like a javelin."
+      document.querySelector('#pilotSpeech').textContent = getDialog("yellow")
       animate(100, "yellow")
       break;
   }
@@ -527,12 +527,37 @@ function getSprite(color){
 }
 
 function getDialog(color){
+  let tempNum = Math.floor(Math.random() * (2 - 0)) + 0;
   switch(color){
     case "red":
+      switch(tempNum){
+        case 0:
+          return "Impressive."
+          break;
+        case 1:
+          return "Not bad."
+          break;
+      }
       break;
     case "blue":
+      switch(tempNum){
+        case 0:
+          return "Alright, I got a hit!"
+          break;
+        case 1:
+          return "One more time!"
+          break;
+      }
       break;
     case "yellow":
+      switch(tempNum){
+        case 0:
+          return "Screeeeeps!"
+          break;
+        case 1:
+          return "Tracking like a javelin."
+          break;
+      }
       break;
   }
 }
