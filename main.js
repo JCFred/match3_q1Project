@@ -8,6 +8,9 @@ var playerPause = true;
 var selected = 0;
 var dotPick = [];
 var matched = false;
+var stopAnimate = false;
+
+var bossDiv = document.querySelector('#bossBig');
 
 //initialize the game;
 drawGrid();
@@ -172,28 +175,51 @@ function destroyMatched(){
 }
 
 
-//get and use the score!
+//get and use the score, then call animation function
 function shootScore(redScore, blueScore, yellowScore){
   if(redScore > 0){
     $('#scoreOne').html("+" + redScore);
     shotAnimation("red", redScore);
+    if(redScore > 3){
+      stopAnimate = false;
+      pilotDialog("red", 0)
+      setTimeout(function(){
+        stopAnimate = true;
+      }, 2000)
+    }
   } else{
     $('#scoreOne').html("");
   }
   if(blueScore > 0){
     $('#scoreTwo').html("+" + blueScore);
     shotAnimation("blue", blueScore);
+    if(blueScore > 3){
+      stopAnimate = false;
+      pilotDialog("blue", 0);
+      setTimeout(function(){
+        stopAnimate = true;
+      }, 2000)
+    }
   } else {
     $('#scoreTwo').html("");
   }
   if(yellowScore > 0){
     $('#scoreThree').html("+" + yellowScore);
     shotAnimation("yellow", yellowScore)
+
+    if(yellowScore > 3){
+      stopAnimate = false;
+      pilotDialog("yellow", 0);
+      setTimeout(function(){
+        stopAnimate = true;
+      }, 2000)
+    }
   } else {
     $('#scoreThree').html("");
   }
 }
 
+//animate bullet divs to move horizontally
 function shotAnimation(color, score){
   if(color === "red"){
     let shotLane = $('#shotOne');
@@ -212,7 +238,6 @@ function shotAnimation(color, score){
     $('#rBullet').animate({'top': lanePos.top + 23, 'left': lanePos.left + 400}, 'slow', function(){
       $('#rBullet').remove();
     });
-
   } else if(color === "blue"){
     let shotLane = $('#shotTwo');
     let tempShot = document.createElement('div');
@@ -254,6 +279,70 @@ function shotAnimation(color, score){
         $('#yBullet').remove();
       });
   }
+}
+
+//animate pilot portrates
+function pilotDialog(color, text){
+  // if($('#spritePortrait').firstChild){
+  //   //let tempRemove = $('#spritePortrait').contents();
+  //   //tempRemove.remove();
+  // }
+  //let newDiv = document.querySelector('#spritePortrait');
+  //$('#tempId').remove();
+  // let newDiv = document.createElement('div');
+  // newDiv.className = 'pilotBox'
+  // newDiv.id = 'tempId'
+  // $('#spritePortrait').append(newDiv);
+  switch(color){
+    case "red":
+      document.querySelector('#pilotName').textContent = "red pilot"
+      document.querySelector('#pilotSpeech').textContent = "Perfect Match!"
+      animate(200, "red")
+
+      break;
+    case "blue":
+      document.querySelector('#pilotName').textContent = "blue pilot"
+      document.querySelector('#pilotSpeech').textContent = "Holy Moly, you're good!"
+      animate(100, "blue")
+
+      break;
+    case "yellow":
+      document.querySelector('#pilotName').textContent = "Auto-Pilot"
+      document.querySelector('#pilotSpeech').textContent = "Tracking like a javelin."
+      animate(100, "yellow")
+      break;
+  }
+    //portraitBox.style.background = "url(sprites/redPilot.png) 0px 0px"
+  }
+
+// function windowPop(time){
+//   setTimeout(function(){
+//     $('#tempId').remove();
+//   }, time)
+// }
+
+
+function sprite(color) {
+  let x = 0 - offset
+  let newDiv = document.querySelector('#spritePortrait');
+  newDiv.style.background = 'url(sprites/'+color+'Pilot.png)' + x + 'px 0px';
+}
+var offset = 0;
+function animate(time, color) {
+  var width = 200
+  var height = 300
+  if (offset > 600) {
+    offset = 0
+  }
+  var spiteGo = setInterval(function() {
+      sprite(color)
+      offset = offset + width
+      if(stopAnimate == true){
+        clearInterval(spiteGo);
+        console.log("stop animation");
+      }
+  }, time)
+
 }
 
 
@@ -436,3 +525,37 @@ function getSprite(color){
   }
   return tempArr;
 }
+
+function getDialog(color){
+  switch(color){
+    case "red":
+      break;
+    case "blue":
+      break;
+    case "yellow":
+      break;
+  }
+}
+
+
+function spriteBoss() {
+  let x = 0 - offset
+  //let newDiv = document.querySelector('#bigBoss');
+  //console.log($('#bigBoss'))
+  //console.log(newDiv);
+  //$('#bigBoss')
+  bossDiv.style.background = 'url(sprites/boss1.png)' + x + 'px 0px';
+}
+var offset = 0;
+function animateBoss(time) {
+  var width = 200
+  var height = 225
+  if (offset > 400) {
+    offset = 0
+  }setInterval(function() {
+      spriteBoss()
+      offset = offset + width
+  }, time)
+
+}
+animateBoss(1000);
