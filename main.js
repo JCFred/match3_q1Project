@@ -9,11 +9,13 @@ var selected = 0;
 var dotPick = [];
 var matched = false;
 var stopAnimate = false;
+var currentDialog = false;
 
 var bossDiv = document.querySelector('#bossBig');
 
 //initialize the game;
 drawGrid();
+animateBoss(1000);
 runGameStep();
 
 //functions with dot clicks
@@ -235,7 +237,7 @@ function shotAnimation(color, score){
       'top': lanePos.top + 23,
       'z-index': 1000
     });
-    $('#rBullet').animate({'top': lanePos.top + 23, 'left': lanePos.left + 400}, 'slow', function(){
+    $('#rBullet').animate({'top': lanePos.top + 23, 'left': lanePos.left + 200}, 'slow', function(){
       $('#rBullet').remove();
     });
   } else if(color === "blue"){
@@ -252,7 +254,7 @@ function shotAnimation(color, score){
       'top': lanePos.top + 23,
       'z-index': 1000
     });
-    $('#bBullet').animate({'top': lanePos.top + 23, 'left': lanePos.left + 400}, 'slow', function(){
+    $('#bBullet').animate({'top': lanePos.top + 23, 'left': lanePos.left + 200}, 'slow', function(){
       $('#bBullet').remove();
     });
   } else if(color === "yellow"){
@@ -275,7 +277,7 @@ function shotAnimation(color, score){
         'top': lanePos.top,
         'z-index': 1000
       });
-      $('#yBullet').animate({'top': lanePos.top, 'left': lanePos.left + 400}, 'slow', function(){
+      $('#yBullet').animate({'top': lanePos.top, 'left': lanePos.left + 200}, 'slow', function(){
         $('#yBullet').remove();
       });
   }
@@ -293,27 +295,31 @@ function pilotDialog(color, text){
   // newDiv.className = 'pilotBox'
   // newDiv.id = 'tempId'
   // $('#spritePortrait').append(newDiv);
-  switch(color){
-    case "red":
-      document.querySelector('#pilotName').textContent = "red pilot"
-      document.querySelector('#pilotSpeech').textContent = getDialog("red")
-      animate(200, "red")
+  if(currentDialog === false){
+    switch(color){
+      case "red":
+        currentDialog = true;
+        document.querySelector('#pilotName').textContent = "red pilot"
+        document.querySelector('#pilotSpeech').textContent = getDialog("red")
+        animatePilot(200, "red")
 
-      break;
-    case "blue":
-      document.querySelector('#pilotName').textContent = "blue pilot"
-      document.querySelector('#pilotSpeech').textContent = getDialog("blue")
-      animate(100, "blue")
+        break;
+      case "blue":
+        currentDialog = true;
+        document.querySelector('#pilotName').textContent = "blue pilot"
+        document.querySelector('#pilotSpeech').textContent = getDialog("blue")
+        animatePilot(150, "blue")
 
-      break;
-    case "yellow":
-      document.querySelector('#pilotName').textContent = "Auto-Pilot"
-      document.querySelector('#pilotSpeech').textContent = getDialog("yellow")
-      animate(100, "yellow")
-      break;
+        break;
+      case "yellow":
+        currentDialog = true;
+        document.querySelector('#pilotName').textContent = "Auto-Pilot"
+        document.querySelector('#pilotSpeech').textContent = getDialog("yellow")
+        animatePilot(150, "yellow")
+        break;
+    }
   }
-    //portraitBox.style.background = "url(sprites/redPilot.png) 0px 0px"
-  }
+}
 
 // function windowPop(time){
 //   setTimeout(function(){
@@ -322,23 +328,24 @@ function pilotDialog(color, text){
 // }
 
 
-function sprite(color) {
+function pilotSprite(color) {
   let x = 0 - offset
   let newDiv = document.querySelector('#spritePortrait');
   newDiv.style.background = 'url(sprites/'+color+'Pilot.png)' + x + 'px 0px';
 }
 var offset = 0;
-function animate(time, color) {
+function animatePilot(time, color) {
   var width = 200
   var height = 300
   if (offset > 600) {
     offset = 0
   }
   var spiteGo = setInterval(function() {
-      sprite(color)
+      pilotSprite(color)
       offset = offset + width
       if(stopAnimate == true){
         clearInterval(spiteGo);
+        currentDialog = false;
         console.log("stop animation");
       }
   }, time)
@@ -527,7 +534,9 @@ function getSprite(color){
 }
 
 function getDialog(color){
-  let tempNum = Math.floor(Math.random() * (2 - 0)) + 0;
+  let min = Math.ceil(0);
+  let max = Math.floor(3);
+  let tempNum = Math.floor(Math.random() * (max - min)) + min;
   switch(color){
     case "red":
       switch(tempNum){
@@ -536,6 +545,9 @@ function getDialog(color){
           break;
         case 1:
           return "Not bad."
+          break;
+        case 2:
+          return "Couldn't have done it better myself."
           break;
       }
       break;
@@ -547,15 +559,20 @@ function getDialog(color){
         case 1:
           return "One more time!"
           break;
+        case 2:
+          return "Let me at em!"
       }
       break;
     case "yellow":
       switch(tempNum){
         case 0:
-          return "Screeeeeps!"
+          return "Systems functional."
           break;
         case 1:
-          return "Tracking like a javelin."
+          return "Target locked."
+          break;
+        case 2:
+          return "Calculating..."
           break;
       }
       break;
@@ -583,4 +600,3 @@ function animateBoss(time) {
   }, time)
 
 }
-animateBoss(1000);
