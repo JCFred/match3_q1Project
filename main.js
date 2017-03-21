@@ -420,15 +420,36 @@ function rePop(){
       for(let i = 0; i < down; i++){
         let tempDot = document.createElement('div');
         let newDiv = $('#'+i+"_"+y)
+        let topDiv = $('#0_' +i);
         let tempColor = randomColor(0,6)
         tempDot.className = "dot";
         let spriteArr = getSprite(tempColor)
         tempDot.style.background = "url(sprites/gems.png)" + spriteArr[0] + "px " + spriteArr[1] + "px";
         tempDot.style.height = boxSize + "px";
         tempDot.style.width = boxSize + "px";
-        newDiv.append(tempDot);
         gridArray[i][y].empty = false;
         gridArray[i][y].color = tempColor;
+        newDiv.append(tempDot);
+
+        let topDivPos = topDiv.offset();
+        console.log(tempColor +" , " + topDivPos);
+        let newDivPos = newDiv.offset();
+        tempDot.id = "dotId"
+        let tempClone = $('#dotId').clone().appendTo($('.boxDropGrid'));
+        $('#dotId').hide()
+
+        tempClone.id = 'dotCloneId'
+        $('#dotCloneId').css({
+          'position': 'absolute',
+          'left': topDivPos.left,
+          'top': topDivPos.top - boxSize,
+          'z-index': 1000
+        });
+        $('#dotCloneId').animate({'top': newDivPos.top, 'left': newDivPos.left}, 'slow', function(){
+          $('#dotId').show();
+          $('#dotCloneId').remove();
+        });
+
       }
     }
   }
