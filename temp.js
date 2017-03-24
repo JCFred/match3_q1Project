@@ -1,54 +1,59 @@
-$('#repopBtn').click(function(){
+//fill empty spots at top with new dots (needs animation!)
+function rePop(){
   for(let y = 0; y < gridSize; y++){
-    //$('#0_' + y).contents().append(y);
-    if(gridArray[0][y].empty == true){
-      if(gridArray[1][y].empty == true){
-        //empty and div below is empty
-        let noFloor = true;
-        let down = 1;
-        while(noFloor){
-          if(gridArray[down][y].empty == true){
-            down += 1;
-          } else {noFloor = false;}
+    if(gridArray[0][y].empty === true){
+      let noFloor = true;
+      let checkDown = 1;
+
+      while(noFloor){
+        if(checkDown >= gridArray){
+          noFloor = false;
+        }else if(gridArray[checkDown][y].empty === true){
+          checkDown += 1;
+        }else{
+          noFloor = false;
         }
-        popNDrop(y, down)
       }
-      popNDrop(y, 0)
+
+      //$('#'+down+'_' + y).contents().append(down);
+      for(let i = checkDown -1; i > -1 ; i--){
+        let newDiv = $('#'+i+"_"+y)
+        let topDiv = $('#0_' +i);
+
+        let tempDot = document.createElement('div');
+        tempDot.className = "dot";
+        let tempColor = randomColor(0,6)
+        let spriteArr = getSprite(tempColor)
+        tempDot.style.background = "url(sprites/gems.png)" + spriteArr[0] + "px " + spriteArr[1] + "px";
+        tempDot.style.height = boxSize + "px";
+        tempDot.style.width = boxSize + "px";
+        gridArray[i][y].empty = false;
+        gridArray[i][y].color = tempColor;
+        newDiv.append(tempDot);
+
+        if(i != 0){
+          setTimeout(function(){
+            let topDivPos = topDiv.offset();
+            let newDivPos = newDiv.offset();
+            tempDot.id = "dotId"
+            let tempClone = $('#dotId').clone().appendTo(topDiv);
+            $('#dotId').hide()
+
+            tempClone.id = 'dotCloneId'
+            $('#dotCloneId').css({
+              'position': 'absolute',
+              'left': topDivPos.left,
+              'top': topDivPos.top,
+              'z-index': 1000
+            });
+            $('#dotCloneId').animate({'top': newDivPos.top, 'left': newDivPos.left}, 'slow', function(){
+              $('#dotId').show();
+              $('#dotCloneId').remove();
+            });
+          }, 200)
+        }
+
+      }
     }
   }
-  matched = false;
-})
-
-function popNDrop(y, num){
-  let tempColor = randomColor(0,6)
-  let newDiv = $('#'+(num-1)+"_"+y)
-  let newChild = document.createElement('div');
-
-  newDiv.append(newChild);
-  newChild.className = "dot";
-  newChild.style.backgroundColor = tempColor;
-  newChild.style.height = boxSize -4 + "px";
-  newChild.style.width = boxSize -4 + "px";
-  let yDiv = $('#0_'+y);
-
-  // let divLeft = yDiv.offset();
-  // let oldDivTop = divLeft.top - boxSize;
-  // let newDivTop = divLeft.top + num*boxSize;
-  //
-  // //newChild.hide();
-  // let dotClone = newChild.clone().appendTo(newDiv);
-  // dotClone.css({
-  //   'position': 'absolute',
-  //   'left': divLeft.left,
-  //   'top': oldDivTop,
-  //   'z-index': 1000
-  // });
-  //
-  // dotClone.animate({'top': newDivTop, 'left': divLeft.left}, 'slow', function(){
-  //   //newChild.show();
-  //   dotClone.remove();
-  // });
-  //
-  gridArray[num][y].color = tempColor;
-  gridArray[num][y].empty = false;
 }

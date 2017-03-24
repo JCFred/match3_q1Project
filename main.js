@@ -12,7 +12,17 @@ var stopAnimate = false;
 var currentDialog = false;
 
 var bossDiv = document.querySelector('#bossBig');
+var bossHp = 30;
+var bossMaxHp = 30;
+var redHp = 20;
+var blueHp = 20;
+var yellowHp = 20;
+var playerMaxHp = 20;
 
+showHp('boss', 15, bossMaxHp)
+showHp("red", 20, playerMaxHp);
+showHp("blue", 10, playerMaxHp);
+showHp("yellow", 4, playerMaxHp);
 //initialize the game;
 drawGrid();
 animateBoss(1000);
@@ -65,7 +75,6 @@ $('.box').click(function(event){
     }
   }
 })
-
 
 
 
@@ -285,16 +294,7 @@ function shotAnimation(color, score){
 
 //animate pilot portrates
 function pilotDialog(color, text){
-  // if($('#spritePortrait').firstChild){
-  //   //let tempRemove = $('#spritePortrait').contents();
-  //   //tempRemove.remove();
-  // }
-  //let newDiv = document.querySelector('#spritePortrait');
-  //$('#tempId').remove();
-  // let newDiv = document.createElement('div');
-  // newDiv.className = 'pilotBox'
-  // newDiv.id = 'tempId'
-  // $('#spritePortrait').append(newDiv);
+
   if(currentDialog === false){
     switch(color){
       case "red":
@@ -321,11 +321,6 @@ function pilotDialog(color, text){
   }
 }
 
-// function windowPop(time){
-//   setTimeout(function(){
-//     $('#tempId').remove();
-//   }, time)
-// }
 
 
 function pilotSprite(color) {
@@ -401,28 +396,30 @@ function hotDrop(child, newParent, y, x, yChange){
   gridArray[y][x].empty = true;
 }
 
-//fill empty spots at top with new dots (needs animation!)
 function rePop(){
   for(let y = 0; y < gridSize; y++){
     if(gridArray[0][y].empty === true){
       let noFloor = true;
-      let down = 1;
+      let checkDown = 1;
+
       while(noFloor){
-        if(gridArray[down][y].empty === true){
-          down += 1;
-        }else if(down > gridArray -1){
+        if(checkDown >= gridArray){
           noFloor = false;
-        } else if (gridArray[down][y].empty === false){
+        }else if(gridArray[checkDown][y].empty === true){
+          checkDown += 1;
+        }else{
           noFloor = false;
         }
       }
+
       //$('#'+down+'_' + y).contents().append(down);
-      for(let i = 0; i < down; i++){
-        let tempDot = document.createElement('div');
+      for(let i = checkDown -1; i > -1 ; i--){
         let newDiv = $('#'+i+"_"+y)
         let topDiv = $('#0_' +i);
-        let tempColor = randomColor(0,6)
+
+        let tempDot = document.createElement('div');
         tempDot.className = "dot";
+        let tempColor = randomColor(0,6)
         let spriteArr = getSprite(tempColor)
         tempDot.style.background = "url(sprites/gems.png)" + spriteArr[0] + "px " + spriteArr[1] + "px";
         tempDot.style.height = boxSize + "px";
@@ -430,31 +427,10 @@ function rePop(){
         gridArray[i][y].empty = false;
         gridArray[i][y].color = tempColor;
         newDiv.append(tempDot);
-
-        let topDivPos = topDiv.offset();
-        console.log(tempColor +" , " + topDivPos);
-        let newDivPos = newDiv.offset();
-        tempDot.id = "dotId"
-        let tempClone = $('#dotId').clone().appendTo($('.boxDropGrid'));
-        $('#dotId').hide()
-
-        tempClone.id = 'dotCloneId'
-        $('#dotCloneId').css({
-          'position': 'absolute',
-          'left': topDivPos.left,
-          'top': topDivPos.top - boxSize,
-          'z-index': 1000
-        });
-        $('#dotCloneId').animate({'top': newDivPos.top, 'left': newDivPos.left}, 'slow', function(){
-          $('#dotId').show();
-          $('#dotCloneId').remove();
-        });
-
       }
     }
   }
 }
-
 
 
 //draw the initial game board at specified sizes
@@ -600,7 +576,7 @@ function getDialog(color){
   }
 }
 
-
+//run boss sprite animation
 function spriteBoss() {
   let x = 0 - offset
   //let newDiv = document.querySelector('#bigBoss');
@@ -620,4 +596,37 @@ function animateBoss(time) {
       offset = offset + width
   }, time)
 
+}
+
+
+//initialize and update character HP
+function showHp(character, current, max){
+  let hpDiv = $('#'+character+'Hp');
+  if(character === "boss"){
+    for(let i = 0; i < current; i++){
+      let tempHp = document.createElement('div');
+      tempHp.className = 'hpPoint';
+      tempHp.style.width = '33px';
+      tempHp.style.height = '7px'
+      if(current/max < .3){
+        tempHp.style.backgroundColor = "red";
+      } else if(current/max < .6){
+        tempHp.style.backgroundColor = "yellow";
+      }
+      hpDiv.append(tempHp)
+    }
+  }else{
+    for(let i = 0; i < current; i++){
+      let tempHp = document.createElement('div');
+      tempHp.className = 'hpPoint';
+      tempHp.style.width = '6px';
+      tempHp.style.height = '47px'
+      if(current/max < .3){
+        tempHp.style.backgroundColor = "red";
+      } else if(current/max < .6){
+        tempHp.style.backgroundColor = "yellow";
+      }
+      hpDiv.append(tempHp)
+    }
+  }
 }

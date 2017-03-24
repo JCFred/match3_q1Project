@@ -3,7 +3,7 @@ body{
   height:100vh;
   min-height: 700px;
   width: 95%;
-  /*justify-content: center;*/
+  justify-content: center;
   align-items:center;
   flex-direction: column;
   background-color:#141414
@@ -14,7 +14,6 @@ body{
     flex-wrap: wrap;
     box-sizing: content-box;
     border: 1px solid red;
-    margin-top: 52px;
 }
 #leftBar{
   box-sizing: content-box;
@@ -65,24 +64,28 @@ body{
   border: 1px solid black;
   height: 100%;
   width: 100%:
+  text-align:center;
 }
 
 .mainBody{
   display:flex;
   justify-content: center;
-  align-items:center;
+  align-items: flex-start;
+  margin-top: 10px;
 }
 .topBody{
   display:flex;
   /*box-sizing: content-box;*/
+  align-items: center;
   justify-content: center;
   flex-direction:column;
   flex-wrap:wrap;
   border:1px solid red;
-  width: 100%;
-  min-height:231px;
+  /*width: 100%;*/
+  min-width: 700px;
   height: 231px;
-  margin-bottom: 10px;
+  min-height:231px;
+  /*margin-bottom: 10px;*/
 }
 .scoreDiv{
   box-sizing: content-box;
@@ -117,11 +120,14 @@ body{
   width: 150px;;
   height: 75px;
 }
+
 #bossHp{
+  display:flex;
+  flex-direction:column;
+  justify-content: flex-end;
   border:1px solid red;
-  height: 100%;
-  width: 5%;
-  border-radius: 30%;
+  height: 210px;
+  width: 35px;
 }
 #shipHpDiv{
   display:flex;
@@ -129,12 +135,19 @@ body{
   height: 225px;
   width: 20%;
 }
+.hpPoint{
+  border-radius: 33%;
+  background-color: green;
+  margin: .5px
+}
 .shipHp{
-  width:100%;
+  display:flex;
+  width:140px;
   height:50px;
-  margin:12.5px;
+  margin-top:12.5px;
+  margin-bottom:12.5px;
   border:1px solid red;
-  border-radius: 25%;
+  /*border-radius: 25%;*/
 }
 #bossBig{
   box-sizing: border-box;
