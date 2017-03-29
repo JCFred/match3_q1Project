@@ -55,7 +55,7 @@ body{
   align-items: center;
   border: 1px solid black;
   height: 25px;
-  width: 100%:
+  width: 100%;
 }
 #pilotSpeech{
   display: flex;
@@ -63,8 +63,8 @@ body{
   align-items: center;
   border: 1px solid black;
   height: 100%;
-  width: 100%:
-  text-align:center;
+  width: 100%;
+  text-align: center;
 }
 
 .mainBody{
@@ -254,4 +254,37 @@ body{
   flex-direction:column;
   justify-content:center;
   align-items: center;
+}
+
+
+.challengeDiv{
+  display:flex;
+  flex-wrap:wrap;
+  /*justify-content: space-between;*/
+  border: 1px solid blue;
+  color:white;
+  text-align: center;
+
+  height: 70px;
+  width: 70px;
+}
+.tempDiv{
+  height:68px;
+  width:30px;
+  border:1px solid white;
+}
+.tempDiv2{
+  width:30px;
+  height:68px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-around;
+}
+.challengeP{
+  margin: 5px;
+  width: 25px;
+}
+#redShot, #blueShot, #yellowShot{
+  display:flex;
+  justify-content: flex-end;
 }

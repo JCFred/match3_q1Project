@@ -12,14 +12,14 @@ var stopAnimate = false;
 var currentDialog = false;
 
 var bossDiv = document.querySelector('#bossBig');
-var bossHp = 30;
 var bossMaxHp = 30;
+var bossHp = bossMaxHp;
 var redHp = 20;
 var blueHp = 20;
 var yellowHp = 20;
 var playerMaxHp = 20;
 
-showHp('boss', 15, bossMaxHp)
+showHp('boss', bossHp, bossMaxHp)
 showHp("red", 20, playerMaxHp);
 showHp("blue", 10, playerMaxHp);
 showHp("yellow", 4, playerMaxHp);
@@ -188,6 +188,9 @@ function destroyMatched(){
 
 //get and use the score, then call animation function
 function shootScore(redScore, blueScore, yellowScore){
+  let fullScore = redScore + blueScore + yellowScore;
+  bossHp -= fullScore;
+  showHp('boss', bossHp, bossMaxHp)
   if(redScore > 0){
     $('#scoreOne').html("+" + redScore);
     shotAnimation("red", redScore);
@@ -233,7 +236,7 @@ function shootScore(redScore, blueScore, yellowScore){
 //animate bullet divs to move horizontally
 function shotAnimation(color, score){
   if(color === "red"){
-    let shotLane = $('#shotOne');
+    let shotLane = $('#redShot');
     let tempShot = document.createElement('div');
     tempShot.className = 'redShot'
     tempShot.id = "rBullet"
@@ -250,7 +253,7 @@ function shotAnimation(color, score){
       $('#rBullet').remove();
     });
   } else if(color === "blue"){
-    let shotLane = $('#shotTwo');
+    let shotLane = $('#blueShot');
     let tempShot = document.createElement('div');
     shotLane.append(tempShot)
     tempShot.className = 'blueShot'
@@ -267,7 +270,7 @@ function shotAnimation(color, score){
       $('#bBullet').remove();
     });
   } else if(color === "yellow"){
-      let shotLane = $('#shotThree')
+      let shotLane = $('#yellowShot')
       let tempShot = document.createElement('div');
       shotLane.append(tempShot);
       tempShot.className = 'yellowShotDiv'
@@ -589,11 +592,12 @@ var offset = 0;
 function animateBoss(time) {
   var width = 200
   var height = 225
-  if (offset > 400) {
-    offset = 0
-  }setInterval(function() {
+  setInterval(function() {
       spriteBoss()
-      offset = offset + width
+      offset = offset + width;
+      if (offset > 400) {
+        offset = 0
+      }
   }, time)
 
 }
@@ -602,6 +606,8 @@ function animateBoss(time) {
 //initialize and update character HP
 function showHp(character, current, max){
   let hpDiv = $('#'+character+'Hp');
+  hpDiv.empty();
+  //boss HP
   if(character === "boss"){
     for(let i = 0; i < current; i++){
       let tempHp = document.createElement('div');
@@ -615,6 +621,7 @@ function showHp(character, current, max){
       }
       hpDiv.append(tempHp)
     }
+  //player ship's HP
   }else{
     for(let i = 0; i < current; i++){
       let tempHp = document.createElement('div');
@@ -629,4 +636,14 @@ function showHp(character, current, max){
       hpDiv.append(tempHp)
     }
   }
+}
+
+// bossAttack('red', 2, 8);
+//attack challenge
+function bossAttack(color, time, damage){
+  let attackLane = $('#'+color+"Shot");
+  let tempDiv = document.createElement('div');
+  tempDiv.className = 'challengeDiv';
+  tempDiv.innerHTML = "<p class='challengeP'>turns: "+time+"</p> <p class='challengeP'>!! "+damage+"</p>";
+  attackLane.append(tempDiv);
 }
